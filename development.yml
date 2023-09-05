@@ -1,0 +1,17 @@
+http:
+  host: 'localhost'
+  port: 8080
+db:
+  mysql:
+    url: 'localhost'
+    port: 3306
+    type: 'mysql'
+    username: 'root'
+    password: '123tfhss'
+    database: 'blog'
+
+  mongo:
+    database: 'mongo'
+jwt:
+  JWT_SECRET: 'sakrugie'
+  JWT_EXPIRATION_TIME: '1d'
