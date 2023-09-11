@@ -22,7 +22,7 @@ export class UserService {
     if (!(await this.isExistUser(name))) {
       return {
         code: 400,
-        mes: 'user not exist',
+        msg: 'user not exist',
       };
     }
     const user = await this.userRepository.findOne({
@@ -32,14 +32,14 @@ export class UserService {
     });
     return {
       code: 200,
-      mes: `find user ${user.username} success`,
+      msg: `find user ${user.username} success`,
     };
   }
   async checkUser(user: CreateUserDto) {
     if (!(await this.isExistUser(user.username))) {
       return {
-        code: 400,
-        mes: 'user not exist',
+        code: 0,
+        msg: '用户不存在',
       };
     }
     const _user = await this.userRepository.findOne({
@@ -50,23 +50,29 @@ export class UserService {
 
     if (user.password === (await this.sharedService.decode(_user.password))) {
       return {
-        code: 200,
-        mes: `check user ${user.username} success`,
+        code: 1,
+        msg: `登录成功`,
+        uid: _user.id,
       };
     }
+    return {
+      code: 0,
+      msg: '密码错误',
+    };
   }
   async createUser(user: CreateUserDto) {
     if (await this.isExistUser(user.username)) {
       return {
-        code: 400,
-        mes: 'user already exist',
+        code: 0,
+        msg: '已存在该用户',
       };
     }
     user.password = await this.sharedService.encode(user.password);
-    // const res = await this.userRepository.save(user);
+    const _user = await this.userRepository.save(user);
     return {
-      code: 200,
-      mes: 'create user success',
+      code: 1,
+      msg: '创建成功',
+      uid: _user.id,
     };
   }
   // 是否存在用户
