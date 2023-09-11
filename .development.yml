@@ -15,3 +15,5 @@ db:
 jwt:
   JWT_SECRET: 'sakrugie'
   JWT_EXPIRATION_TIME: '1d'
+secret:
+  key: 'sakurigesakurigesakurigesakurige'
