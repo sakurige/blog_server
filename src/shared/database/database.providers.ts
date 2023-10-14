@@ -1,7 +1,7 @@
-import { join } from 'path';
-import { ConfigService } from '@nestjs/config';
-import { DataSource, DataSourceOptions } from 'typeorm';
 import { Provider } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { join } from 'path';
+import { DataSource, DataSourceOptions } from 'typeorm';
 const MYSQL: DataSourceOptions['type'] = 'mysql';
 const MONGO: DataSourceOptions['type'] = 'mongodb';
 export const databaseProviders: Provider[] = [
