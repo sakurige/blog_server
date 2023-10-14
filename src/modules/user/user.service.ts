@@ -1,6 +1,7 @@
-import { UesrDto } from './dtos/user.dto';
 import { Inject, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
+
+import { UesrDto } from './dtos/user.dto';
 import UserEntity from './entities/user.entity.mysql';
 @Injectable()
 export class UserService {

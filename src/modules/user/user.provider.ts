@@ -1,5 +1,6 @@
-import { DataSource } from 'typeorm';
 import { Provider } from '@nestjs/common';
+import { DataSource } from 'typeorm';
+
 import UserEntity from './entities/user.entity.mysql';
 const userProviders: Provider[] = [
   {
