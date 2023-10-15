@@ -1,0 +1,19 @@
+http:
+  host: XXX
+  port: XXX
+db:
+  mysql:
+    url: XXX
+    port: XXX
+    type: XXX
+    username: XXX
+    password: XXX
+    database: XXX
+
+  mongo:
+    database: XX
+jwt:
+  JWT_SECRET: XXX
+  JWT_EXPIRATION_TIME: XXX
+secret:
+  key: XXX

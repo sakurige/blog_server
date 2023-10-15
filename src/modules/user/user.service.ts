@@ -1,13 +1,15 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 
-import { UesrDto } from './dtos/user.dto';
+import { SharedService } from './../../shared/shared.service';
+import { CreateUserDto } from './dtos/user.dto';
 import UserEntity from './entities/user.entity.mysql';
 @Injectable()
 export class UserService {
   constructor(
     @Inject('USER_REPOSITORY')
     private readonly userRepository: Repository<UserEntity>,
+    private readonly sharedService: SharedService,
   ) {}
   async findOne(name: string) {
     return this.userRepository.findOne({
@@ -33,16 +35,35 @@ export class UserService {
       mes: `find user ${user.username} success`,
     };
   }
-  async createUser(user: UesrDto) {
+  async checkUser(user: CreateUserDto) {
+    if (!(await this.isExistUser(user.username))) {
+      return {
+        code: 400,
+        mes: 'user not exist',
+      };
+    }
+    const _user = await this.userRepository.findOne({
+      where: {
+        username: user.username,
+      },
+    });
+
+    if (user.password === (await this.sharedService.decode(_user.password))) {
+      return {
+        code: 200,
+        mes: `check user ${user.username} success`,
+      };
+    }
+  }
+  async createUser(user: CreateUserDto) {
     if (await this.isExistUser(user.username)) {
       return {
         code: 400,
         mes: 'user already exist',
       };
     }
-    const res = await this.userRepository.save(user);
-    console.log('res', res);
-
+    user.password = await this.sharedService.encode(user.password);
+    // const res = await this.userRepository.save(user);
     return {
       code: 200,
       mes: 'create user success',
@@ -55,8 +76,6 @@ export class UserService {
         username: name,
       },
     });
-    console.log('isExist', isExist);
-
     return isExist;
   }
 }
