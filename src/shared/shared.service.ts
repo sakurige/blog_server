@@ -1,12 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { createCipheriv, createDecipheriv, randomBytes } from 'crypto';
+import { JwtService } from '@nestjs/jwt';
+import { createCipheriv, createDecipheriv } from 'crypto';
 @Injectable()
 export class SharedService {
-  #iv = randomBytes(16);
+  #iv = '#ahxihxtpoiz!256';
   #key = this.confingSerive.get<string>('secret.key');
 
-  constructor(private readonly confingSerive: ConfigService) {}
+  constructor(
+    private readonly confingSerive: ConfigService,
+    private readonly jwtService: JwtService,
+  ) {}
   getHello(): string {
     return 'Hello World!';
   }
@@ -29,5 +33,34 @@ export class SharedService {
     ]);
 
     return decrpyted.toString();
+  }
+  // 生成token
+  async generateToken(userId: number): Promise<{
+    token: string;
+    refresh_token: string;
+  }> {
+    const token = this.jwtService.sign(
+      {
+        userId: userId,
+      },
+      {
+        expiresIn: '1d',
+        secret: this.confingSerive.get<string>('jwt.JWT_SECRET'),
+      },
+    );
+
+    const refresh_token = this.jwtService.sign(
+      {
+        userId: userId,
+      },
+      {
+        expiresIn: '7d',
+        secret: this.confingSerive.get<string>('jwt.JWT_SECRET'),
+      },
+    );
+    return {
+      token,
+      refresh_token,
+    };
   }
 }
